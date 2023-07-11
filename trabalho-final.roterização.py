@@ -2,6 +2,8 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import matplotlib.pyplot as plt
+import tkinter
+from tkinter import *
 
 # Antecedentes (entradas)
 proteina = ctrl.Antecedent(np.arange(0, 11, 1), 'proteina')
@@ -35,24 +37,6 @@ laticinios.automf(names=['muito baixo', 'baixo', 'medio', 'alto', 'muito alto'])
 vegetais.automf(names=['muito baixo', 'baixo', 'medio', 'alto', 'muito alto'])
 legumes.automf(names=['muito baixo', 'baixo', 'medio', 'alto', 'muito alto'])
 
-# Visualizando as funções de pertinência
-proteina.view()
-acucar.view()
-carboidratos.view()
-gordura.view()
-fibra.view()
-agua.view()
-
-carnes.view()
-frutas_doces.view()
-graos.view()
-laticinios.view()
-vegetais.view()
-legumes.view()
-
-plt.show()
-
-# Regras de lógica fuzzy para carnes
 rule1 = ctrl.Rule(proteina['alto'] & acucar['baixo'], carnes['muito alto'])
 rule2 = ctrl.Rule(proteina['alto'] & acucar['medio'], carnes['alto'])
 rule3 = ctrl.Rule(proteina['alto'] & acucar['alto'], carnes['medio'])
@@ -127,37 +111,105 @@ grocery_ctrl = ctrl.ControlSystem([rule1, rule2,rule3,rule4,rule5,rule6,rule7,ru
                                    rule46, rule47, rule48, rule49, rule50, rule51, rule52, rule53, rule54])
 grocery = ctrl.ControlSystemSimulation(grocery_ctrl)
 
-# Passa as entradas para o Sistema de Controle
-proteinaInput = 8.5
-acucarInput = 3.2
-carboidratosInput = 6.5
-gorduraInput = 7.3
-fibraInput = 6.5
-aguaInput = 3.3
 
-grocery.input['proteina'] = proteinaInput
-grocery.input['acucar'] = acucarInput
-grocery.input['carboidratos'] = carboidratosInput
-grocery.input['gordura'] = gorduraInput
-grocery.input['fibra'] = fibraInput
-grocery.input['agua'] = aguaInput
 
-# Computa o sistema de controle
-grocery.compute()
+def submit_button_event():
+    proteinaInput = float(form_proteina.get())
+    acucarInput = float(form_acucar.get())
+    carboidratosInput = float(form_carboidratos.get())
+    gorduraInput = float(form_gordura.get())
+    fibraInput = float(form_fibra.get())
+    aguaInput = float(form_agua.get())
 
-# Imprime as saídas
-print(grocery.output['carnes'])
-print(grocery.output['frutas_doces'])
-print(grocery.output['graos'])
-print(grocery.output['laticinios'])
-print(grocery.output['vegetais'])
-print(grocery.output['legumes'])
+    grocery.input['proteina'] = proteinaInput
+    grocery.input['acucar'] = acucarInput
+    grocery.input['carboidratos'] = carboidratosInput
+    grocery.input['gordura'] = gorduraInput
+    grocery.input['fibra'] = fibraInput
+    grocery.input['agua'] = aguaInput
 
-# Visualiza o resultado
-carnes.view(sim=grocery)
-frutas_doces.view(sim=grocery)
-graos.view(sim=grocery)
-laticinios.view(sim=grocery)
-vegetais.view(sim=grocery)
-legumes.view(sim=grocery)
-plt.show()
+    grocery.compute()
+
+    result_carnes.config(text=f"Carnes: {grocery.output['carnes']}")
+    result_frutas_doces.config(text=f"Frutas doces: {grocery.output['frutas_doces']}")
+    result_graos.config(text=f"Grãos: {grocery.output['graos']}")
+    result_laticinios.config(text=f"Laticínios: {grocery.output['laticinios']}")
+    result_vegetais.config(text=f"Vegetais: {grocery.output['vegetais']}")
+    result_legumes.config(text=f"Legumes: {grocery.output['legumes']}")
+
+    carnes.view(sim=grocery)
+    frutas_doces.view(sim=grocery)
+    graos.view(sim=grocery)
+    laticinios.view(sim=grocery)
+    vegetais.view(sim=grocery)
+    legumes.view(sim=grocery)
+    plt.show()
+def fill_form():
+    form_proteina.delete(0, tkinter.END)
+    form_proteina.insert(0, str(8.5))
+    form_acucar.delete(0, tkinter.END)
+    form_acucar.insert(0, str(3.2))
+    form_carboidratos.delete(0, tkinter.END)
+    form_carboidratos.insert(0, str(6.5))
+    form_gordura.delete(0, tkinter.END)
+    form_gordura.insert(0, str(7.3))
+    form_fibra.delete(0, tkinter.END)
+    form_fibra.insert(0, str(6.5))
+    form_agua.delete(0, tkinter.END)
+    form_agua.insert(0, str(3.3))
+
+
+window = Tk()
+window.title("IA-TRABALHO-GRUPO-ESDRAS-JOAO-OTAVIO-FELIPE MENDES")
+window.geometry('600x600')
+window.configure(background="gray")
+
+# Criando os campos de entrada para os antecedentes
+label_proteina = tkinter.Label(window, text="Proteína:",background="gray")
+label_acucar = tkinter.Label(window, text="Açúcar:",background="gray")
+label_carboidratos = tkinter.Label(window, text="Carboidratos:",background="gray")
+label_gordura = tkinter.Label(window, text="Gordura:",background="gray")
+label_fibra = tkinter.Label(window, text="Fibra:",background="gray")
+label_agua = tkinter.Label(window, text="Água:",background="gray")
+
+form_proteina = Entry(window)
+form_acucar = Entry(window)
+form_carboidratos = Entry(window)
+form_gordura = Entry(window)
+form_fibra = Entry(window)
+form_agua = Entry(window)
+
+label_proteina.place(x=100,y=50)
+form_proteina.place(x=325,y=50)
+label_acucar.place(x=100,y=80)
+form_acucar.place(x=325,y=80)
+label_carboidratos.place(x=100,y=110)
+form_carboidratos.place(x=325,y=110)
+label_gordura.place(x=100,y=140)
+form_gordura.place(x=325,y=140)
+label_fibra.place(x=100,y=170)
+form_fibra.place(x=325,y=170)
+label_agua.place(x=100, y=200)
+form_agua.place(x=325, y=200)
+
+submit_button = Button(window, text="Submit", command=submit_button_event)
+submit_button.place(x=350, y=300)
+# Criação do botão "Fill"
+fill_button = tkinter.Button(window, text="Fill", command=fill_form)
+fill_button.place(x=350, y=350)
+# Criando labels para mostrar as saídas
+result_carnes = Label(window, text="")
+result_frutas_doces = Label(window, text="")
+result_graos = Label(window, text="")
+result_laticinios = Label(window, text="")
+result_vegetais = Label(window, text="")
+result_legumes = Label(window, text="")
+
+result_carnes.place(x=100, y=400)
+result_frutas_doces.place(x=100, y=420)
+result_graos.place(x=100,y=440)
+result_laticinios.place(x=100,y=460)
+result_vegetais.place(x=100,y=480)
+result_legumes.place(x=100,y=500)
+
+window.mainloop()
