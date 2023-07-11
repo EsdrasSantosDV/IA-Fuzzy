@@ -4,7 +4,7 @@ from skfuzzy import control as ctrl
 import matplotlib.pyplot as plt
 import tkinter
 from tkinter import *
-
+from matplotlib.backends.backend_pdf import PdfPages
 # Antecedentes (entradas)
 proteina = ctrl.Antecedent(np.arange(0, 11, 1), 'proteina')
 acucar = ctrl.Antecedent(np.arange(0, 11, 1), 'acucar')
@@ -137,13 +137,38 @@ def submit_button_event():
     result_vegetais.config(text=f"Vegetais: {grocery.output['vegetais']}")
     result_legumes.config(text=f"Legumes: {grocery.output['legumes']}")
 
-    carnes.view(sim=grocery)
-    frutas_doces.view(sim=grocery)
-    graos.view(sim=grocery)
-    laticinios.view(sim=grocery)
-    vegetais.view(sim=grocery)
-    legumes.view(sim=grocery)
-    plt.show()
+    # Cria uma nova instância de PdfPages
+    pdf = PdfPages('pertinencias.pdf')
+
+    # Lista com todas as variáveis
+    variables = [proteina, acucar, carboidratos, gordura, fibra, agua, carnes, frutas_doces, graos, laticinios,
+                 vegetais, legumes]
+
+    # Para cada variável
+    for var in variables:
+        # Cria uma nova figura
+        fig, ax = plt.subplots()
+
+        # Plota cada função de pertinência
+        for name in var.terms:
+            ax.plot(var.universe, var[name].mf, label=name)
+
+        # Configura a visualização do gráfico
+        ax.legend()
+        plt.title( var.label)
+
+        # Salva a figura na página atual do PDF
+        pdf.savefig(fig)
+
+        # Fecha a figura
+        plt.close(fig)
+
+
+
+    # Fecha o objeto PdfPages
+    pdf.close()
+
+
 def fill_form():
     form_proteina.delete(0, tkinter.END)
     form_proteina.insert(0, str(8.5))
