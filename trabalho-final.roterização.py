@@ -19,7 +19,6 @@ frutas_doces = ctrl.Consequent(np.arange(0, 11, 1), 'frutas_doces')
 graos = ctrl.Consequent(np.arange(0, 11, 1), 'graos')
 laticinios = ctrl.Consequent(np.arange(0, 11, 1), 'laticinios')
 vegetais = ctrl.Consequent(np.arange(0, 11, 1), 'vegetais')
-legumes = ctrl.Consequent(np.arange(0, 11, 1), 'legumes')
 
 # Funções de pertinência para proteína, açúcar, carboidratos e gordura
 proteina.automf(names=['baixo', 'medio', 'alto'])
@@ -35,7 +34,6 @@ frutas_doces.automf(names=['muito baixo', 'baixo', 'medio', 'alto', 'muito alto'
 graos.automf(names=['muito baixo', 'baixo', 'medio', 'alto', 'muito alto'])
 laticinios.automf(names=['muito baixo', 'baixo', 'medio', 'alto', 'muito alto'])
 vegetais.automf(names=['muito baixo', 'baixo', 'medio', 'alto', 'muito alto'])
-legumes.automf(names=['muito baixo', 'baixo', 'medio', 'alto', 'muito alto'])
 
 rule1 = ctrl.Rule(proteina['alto'] & acucar['baixo'], carnes['muito alto'])
 rule2 = ctrl.Rule(proteina['alto'] & acucar['medio'], carnes['alto'])
@@ -91,24 +89,15 @@ rule43= ctrl.Rule(fibra['baixo'] & agua['baixo'], vegetais['medio'])
 rule44 = ctrl.Rule(fibra['baixo'] & agua['medio'], vegetais['baixo'])
 rule45= ctrl.Rule(fibra['baixo'] & agua['alto'], vegetais['muito baixo'])
 
-# Regras de lógica fuzzy para legumes
-rule46 = ctrl.Rule(fibra['alto'] & agua['baixo'], legumes['muito alto'])
-rule47 = ctrl.Rule(fibra['alto'] & agua['medio'], legumes['alto'])
-rule48 = ctrl.Rule(fibra['alto'] & agua['alto'], legumes['medio'])
-rule49 = ctrl.Rule(fibra['medio'] & agua['baixo'], legumes['alto'])
-rule50 = ctrl.Rule(fibra['medio'] & agua['medio'], legumes['medio'])
-rule51= ctrl.Rule(fibra['medio'] & agua['alto'], legumes['baixo'])
-rule52= ctrl.Rule(fibra['baixo'] & agua['baixo'], legumes['medio'])
-rule53 = ctrl.Rule(fibra['baixo'] & agua['medio'], legumes['baixo'])
-rule54= ctrl.Rule(fibra['baixo'] & agua['alto'], legumes['muito baixo'])
+
 
 # Cria o sistema de controle
 grocery_ctrl = ctrl.ControlSystem([rule1, rule2,rule3,rule4,rule5,rule6,rule7,rule8,rule9,rule10,
                                    rule11,rule12,rule13,rule14,rule15,rule16,rule17,rule18,rule19,
                                    rule20, rule21, rule22, rule23, rule24,rule25, rule26, rule27,
                                    rule28, rule29, rule30, rule31, rule32, rule33,rule34, rule35, rule36,
-                                   rule37, rule38, rule39, rule40, rule41, rule42, rule43, rule44, rule45,
-                                   rule46, rule47, rule48, rule49, rule50, rule51, rule52, rule53, rule54])
+                                   rule37, rule38, rule39, rule40, rule41, rule42, rule43, rule44, rule45
+                        ])
 grocery = ctrl.ControlSystemSimulation(grocery_ctrl)
 
 
@@ -135,14 +124,13 @@ def submit_button_event():
     result_graos.config(text=f"Grãos: {grocery.output['graos']}")
     result_laticinios.config(text=f"Laticínios: {grocery.output['laticinios']}")
     result_vegetais.config(text=f"Vegetais: {grocery.output['vegetais']}")
-    result_legumes.config(text=f"Legumes: {grocery.output['legumes']}")
 
     # Cria uma nova instância de PdfPages
     pdf = PdfPages('pertinencias.pdf')
 
     # Lista com todas as variáveis
     variables = [proteina, acucar, carboidratos, gordura, fibra, agua, carnes, frutas_doces, graos, laticinios,
-                 vegetais, legumes]
+                 vegetais]
 
     # Para cada variável
     for var in variables:
